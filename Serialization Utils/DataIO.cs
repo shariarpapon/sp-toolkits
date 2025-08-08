@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 using UnityEngine;
 #endif
 
-namespace SPToolkits
+namespace SPToolkits.SerializationUtils
 {
     /// <summary>
     /// Contains helper methods for de/serializing objects.
