@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 using UnityEngine;
 #endif
 
-namespace SPToolkits.SerializationUtils
+namespace SPToolkits
 {
     /// <summary>
     /// Contains helper methods for de/serializing objects.
@@ -17,11 +17,11 @@ namespace SPToolkits.SerializationUtils
     /// </para>
     /// <para>The JSON serialization methods are exlusive to Unity engine.</para>
     /// </summary>
-    public static class SerializationUtils
+    public static class DataIO
     {
         /// <summary>Tries to save object in binary format.</summary>
         /// <returns>True if the object was successfully saved and false if it fails.</returns>
-        public static bool TrySaveToBinary<T>(string path, T dataObject)
+        public static bool TrySaveToBinary<T>(string path, T dataObject) 
         {
             try
             {
@@ -39,7 +39,7 @@ namespace SPToolkits.SerializationUtils
 
         ///<summary>Tries load object from a binary file.</summary>
         /// <returns>True if the object was successfully loaded and false if it fails.</returns>
-        public static bool TryLoadFromBinary<T>(string path, out T dataObject)
+        public static bool TryLoadFromBinary<T>(string path, out T dataObject) 
         {
             dataObject = default;
             try
@@ -58,7 +58,7 @@ namespace SPToolkits.SerializationUtils
 
         /// <summary>Tries to save object in XML format.</summary>
         /// <returns>True if the object was successfully saved and false if it fails.</returns>
-        public static bool TrySaveToXML<T>(string path, T dataObject)
+        public static bool TrySaveToXML<T>(string path, T dataObject) 
         {
             try
             {
@@ -91,13 +91,28 @@ namespace SPToolkits.SerializationUtils
             }
         }
 
+        /// <summary>
+        /// Deletes the file at the given path.
+        /// </summary>
+        /// <param name="path">The path of the file to delete.</param>
+        /// <returns>True, if file was found and deleted.</returns>
+        public static bool DeleteFile(string path) 
+        {
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+                return true;
+            }
+            return false;
+        }
+
 #if UNITY_2022_1_OR_NEWER
         ///<summary>Tries to save object in json format</summary>
         /// <returns>True if the object was successfully saved and false if it fails.</returns>
         public static bool TrySaveToJSON<T>(string path, T dataObject)
         {
             try
-            {
+            { 
                 string jsonData = JsonUtility.ToJson(dataObject);
                 File.WriteAllText(path, jsonData);
                 return true;
@@ -110,7 +125,7 @@ namespace SPToolkits.SerializationUtils
         }
 
         ///<summary>Tries load object from a json file.</summary>
-        /// <returns>True if the object was successfully loaded and false if it fails.</returns>
+        /// <returns>True if the json file is not empty or null and the object was successfully loaded.</returns>
         public static bool TryLoadFromJSON<T>(string path, out T dataObject)
         {
             dataObject = default;
@@ -118,7 +133,6 @@ namespace SPToolkits.SerializationUtils
             {
                 if (!File.Exists(path))
                     return false;
-
                 string jsonData = File.ReadAllText(path);
                 if (string.IsNullOrEmpty(jsonData))
                     return false;
