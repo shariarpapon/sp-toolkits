@@ -3,7 +3,7 @@ using SPToolkits.InputSystem;
 
 namespace SPToolkits.Movement
 {
-    [CreateAssetMenu(fileName ="Player Jump", menuName = "SPToolkits/Motion Suppliers/Player Jump")]
+    [CreateAssetMenu(fileName ="Player Jump", menuName ="Wiz/Motion Suppliers/Player Jump")]
     public class PlayerJump : MotionSupplier
     {
         public float peakJumpHeight = 1.5f;
@@ -23,9 +23,9 @@ namespace SPToolkits.Movement
             _jumpSpeed = MovementUtils.CalculateJumpSpeed(22f, peakJumpHeight);
         }
 
-        protected override void Tick(float deltaTime, MotionControlContext ctx)
+        protected override void _Tick(float deltaTime, MotionControlContext ctx)
         {
-            if (ctx.isCenterGrounded && Vector3.Dot(ctx.verticalVelocity.normalized, ctx.transform.up) <= 0f)
+            if (ctx.isCenterGrounded && Vector3.Dot(ctx.verticalVelocity.normalized, ctx.LocalUp) <= 0f)
             {
                 _coyoteTimer = coyoteTime;
                 _inputBufferTime = 0;
@@ -48,8 +48,7 @@ namespace SPToolkits.Movement
                 if (ctx.isCenterGrounded || _coyoteTimer > 0 || _jumpCount < maxJumpCount)
                 {
                     _jumpCount++;
-                    ctx.verticalVelocity = _jumpSpeed * ctx.transform.up;
-                    Debug.Log("jumpcount: " + _jumpCount);
+                    ctx.verticalVelocity = _jumpSpeed * ctx.LocalUp;
                 }
         }
     }

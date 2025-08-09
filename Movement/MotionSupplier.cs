@@ -4,17 +4,25 @@ namespace SPToolkits.Movement
 {
     public abstract class MotionSupplier : ScriptableObject
     {
-        public bool isEnabled = true;
+        public bool IsEnabled => _isEnabled;
 
-        public void Step(float deltaTime, MotionControlContext ctx)
+        [SerializeField] private bool _isEnabled = true;
+
+        public void Tick(float deltaTime, MotionControlContext ctx)
         {
-            if (!isEnabled)
+            if (!_isEnabled)
                 return;
-            Tick(deltaTime, ctx);
+
+            _Tick(deltaTime, ctx);
         }
 
         public virtual void Init(MotionControlContext ctx) { }
 
-        protected abstract void Tick(float deltaTime, MotionControlContext ctx);
+        protected abstract void _Tick(float deltaTime, MotionControlContext ctx);
+
+        public void SetEnabled(bool enabled)
+        {
+            _isEnabled = enabled;
+        }
     }
 }

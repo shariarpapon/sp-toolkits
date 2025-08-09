@@ -5,6 +5,7 @@ namespace SPToolkits.Movement
     public class MotionControlContext
     {
         //Dependencies
+        public readonly CharacterControllerMotionHandler handler = null; 
         public readonly CharacterController controller = null;
         public readonly Transform transform = null;
         public readonly Camera viewCamera = null;
@@ -20,8 +21,9 @@ namespace SPToolkits.Movement
         public Vector3 lateralVelocity = Vector3.zero;
         public Vector3 verticalVelocity = Vector3.zero;
 
-        public MotionControlContext(CharacterController controller, GlobalMovementSettings settings, Camera viewCamera) 
+        public MotionControlContext(CharacterControllerMotionHandler handler, CharacterController controller, GlobalMovementSettings settings, Camera viewCamera) 
         {
+            this.handler = handler;
             this.controller = controller;
             this.settings = settings;
             this.viewCamera = viewCamera;
