@@ -30,7 +30,7 @@ namespace SPToolkits.ComplexMathematics
 
         public static float RiemannZeta(int lower, int upper, float s, float scaler = 1)
         {
-            lower = GreaterThan0(lower);
+            lower = ClampAbove0(lower);
             float sum = 0;
             for (int n = lower; n <= upper; n++) sum += 1 / (float)Math.Pow(n, s);
             return sum * scaler;
@@ -38,7 +38,7 @@ namespace SPToolkits.ComplexMathematics
 
         public static ComplexValue RiemannZetaSum(int lower, int upper, ComplexValue s, float scaler = 1)
         {
-            lower = GreaterThan0(lower);
+            lower = ClampAbove0(lower);
             ComplexValue sum = ComplexValue.Origin;
             for (int n = lower; n <= upper; n++) sum = sum + (1 / Power(n, s));
             return sum * scaler;
@@ -46,7 +46,7 @@ namespace SPToolkits.ComplexMathematics
 
         public static ComplexValue[] RiemannZetaPartialSums(int lower, int upper, ComplexValue s, float scaler = 1)
         {
-            lower = GreaterThan0(lower);
+            lower = ClampAbove0(lower);
             List<ComplexValue> values = new List<ComplexValue>();
             ComplexValue sum = ComplexValue.Origin;
             for (int n = lower; n <= upper; n++)
@@ -62,7 +62,7 @@ namespace SPToolkits.ComplexMathematics
             return (value > max) ? max : (value < min) ? min : value;
         }
 
-        public static int GreaterThan0(int value)
+        public static int ClampAbove0(int value)
         {
             return (value <= 0) ? 1 : value;
         }
