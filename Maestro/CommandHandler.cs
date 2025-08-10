@@ -35,7 +35,7 @@ namespace SPToolkits.Maestro
                 else if (_commands.ContainsKey(parsedCommand.keyword))
                 {
                     command = _commands[parsedCommand.keyword];
-                    if (parsedCommand.argumentCount < command.MinimumArgumentCount)
+                    if (parsedCommand.argumentCount < command.MinArgCount)
                         return new CommandExecutionResult(CommandExecutionStatus.InvalidArgumentCount, parsedCommand, command);
                     else if (command.Execute(_terminal, parsedCommand.arguments))
                         return new CommandExecutionResult(CommandExecutionStatus.Successful, parsedCommand, command);

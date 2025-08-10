@@ -18,7 +18,9 @@ namespace SPToolkits.Maestro
         public bool printParserErrors = true;
         public string helpKeyword = "help";
         public string lineStarter = "> ";
+
         public char submissionChar = '\n';
+        public System.Func<bool> submissionCondition = null;
 
         private MaestroConfigurations(IMaestroIOHandler ioHandler, IEnumerable<IMaestroCommand> commands) 
         {
@@ -39,8 +41,31 @@ namespace SPToolkits.Maestro
             return new MaestroConfigurations(ioHandler, commands);
         }
 
+
         /// <summary>
-        /// Stores this object in the out instance.
+        /// The input scanner will submit the input string for execution upon encountering this character.
+        /// <br>This logic is superceded if a submissionCondition is explicitely defined.</br>
+        /// </summary>
+        /// <param name="instance">The instance of this object</param>
+        public MaestroConfigurations SetSubmissionChar(char submissionChars)
+        {
+            this.submissionChar = submissionChars;
+            return this;
+        }
+
+        /// <summary>
+        /// The input scanner will submit the input string upon this condition returning true.
+        /// <br>This logic will supercede any implicite submission character check.</br>
+        /// </summary>
+        /// <param name="instance">The instance of this object</param>
+        public MaestroConfigurations SetSubmissionCondition(System.Func<bool> submissionCondition)
+        {
+            this.submissionCondition = submissionCondition;
+            return this;
+        }
+
+        /// <summary>
+        /// Outputs a reference to this MaestroConfiguration instance.
         /// </summary>
         /// <param name="instance">The instance of this object</param>
         public MaestroConfigurations MakeReference(out MaestroConfigurations instance) 
@@ -52,10 +77,10 @@ namespace SPToolkits.Maestro
         /// <summary>
         /// Sets a callback action that will be invoked when commands are executed.
         /// </summary>
-        /// <param name="onCommandExecuted">Callback event for when commands are executed.</param>
-        public MaestroConfigurations SetOnCommandExecutedCallback(System.Action<CommandExecutionResult> onCommandExecuted)
+        /// <param name="onCommandExecutedCallback">Callback event for when commands are executed.</param>
+        public MaestroConfigurations SetOnCommandExecutedCallback(System.Action<CommandExecutionResult> onCommandExecutedCallback)
         {
-            onCommandExecutedCallback = onCommandExecuted;
+            this.onCommandExecutedCallback = onCommandExecutedCallback;
             return this;
         }
 

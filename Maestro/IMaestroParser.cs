@@ -5,6 +5,9 @@
     /// </summary>
     public interface IMaestroParser 
     {
+        public char Escape { get; set; }
+        public char CommandStart { get; set; }
+        public char StringLiteral { get; set; }
         ParserOutput Parse(string source);
     }
 }

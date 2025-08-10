@@ -5,9 +5,17 @@ namespace SPToolkits.Maestro
 {
     public sealed class MaestroDefaultParser : IMaestroParser
     {
-        public const char ESCAPE = '\\';
-        public const char COMMAND_START = '/';
-        public const char STRING_LITERAL = '"';
+        public char Escape { get; set; } = '\\';
+        public char CommandStart { get; set; } = '/';
+        public char StringLiteral { get; set; } = '"';
+
+        public MaestroDefaultParser(char escape, char commandStart, char stringLiteral) 
+        {
+            this.Escape = escape;
+            this.CommandStart= commandStart;
+            this.StringLiteral = stringLiteral;
+        }
+        public MaestroDefaultParser() { }
 
         public ParserOutput Parse(string source)
         {
@@ -28,7 +36,7 @@ namespace SPToolkits.Maestro
 
             foreach (string token in tokens)
             {
-                if (token.StartsWith(COMMAND_START.ToString()))
+                if (token.StartsWith(CommandStart.ToString()))
                 {
                     cmdCount++;
                     if (parsing == true)
@@ -70,25 +78,30 @@ namespace SPToolkits.Maestro
                     continue;
                 }
 
-                switch (c)
+                if (c == Escape)
                 {
-                    case ESCAPE:
-                        esacpeFlag = true;
-                        continue;
-                    case STRING_LITERAL:
-                        stringLiteralFlag = !stringLiteralFlag;
-                        continue;
-                    case ' ':
-                        if (stringLiteralFlag) buffer.Append(c);
-                        else if (!string.IsNullOrWhiteSpace(buffer.ToString()))
-                        {
-                            tokens.Add(buffer.ToString());
-                            buffer.Clear();
-                        }
-                        continue;
-                    default:
-                        buffer.Append(c);
-                        continue;
+                    esacpeFlag = true;
+                    continue;
+                }
+                else if (c == StringLiteral)
+                {
+                    stringLiteralFlag = !stringLiteralFlag;
+                    continue;
+                }
+                else if (c == ' ')
+                {
+                    if (stringLiteralFlag) buffer.Append(c);
+                    else if (!string.IsNullOrWhiteSpace(buffer.ToString()))
+                    {
+                        tokens.Add(buffer.ToString());
+                        buffer.Clear();
+                    }
+                    continue;
+                }
+                else 
+                {
+                    buffer.Append(c);
+                    continue;
                 }
             }
             if (buffer.Length > 0 && !string.IsNullOrWhiteSpace(buffer.ToString()))

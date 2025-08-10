@@ -9,12 +9,12 @@
         /// The keyword for this command.
         /// <br><b>IMPORTANT</b>Cannot have more then one of the same keyword.</br>
         /// </summary>
-        string Keyword { get; }
+        string Keyword { get; set; }
 
         /// <summary>
         /// The minimum required number of arguments.
         /// </summary>
-        uint MinimumArgumentCount { get; }
+        uint MinArgCount { get; set;  }
 
         /// <summary>
         /// Called upon entering the command in the terminal.
