@@ -10,6 +10,10 @@ namespace SPToolkits.InputSystem
     {
         public bool PauseGame => UnityInput.GetKeyDown(KeyCode.Escape);
         public bool TabMenu => UnityInput.GetKeyDown(KeyCode.Tab);
+
+        public bool OpenCommandConsole => UnityInput.GetKeyDown(KeyCode.F1);
+        public bool Submit => UnityInput.GetKeyDown(KeyCode.Return);
+
         public bool Jump => UnityInput.GetKeyDown(KeyCode.Space);
         public bool Sprint => UnityInput.GetKey(KeyCode.LeftShift);
         public bool Aim => UnityInput.GetMouseButton(1);

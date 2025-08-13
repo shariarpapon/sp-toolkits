@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace SPToolkits.Maestro
 {
@@ -22,6 +23,8 @@ namespace SPToolkits.Maestro
         private CommandHandler _commandHandler;
         private IMaestroIOHandler _ioHandler;
 
+        private Task _asyncScanTask;
+        private CancellationTokenSource _cancellationTokenSource;
         /// <summary>
         /// Initialize the terminal with the given configurations.
         /// </summary>
@@ -34,37 +37,57 @@ namespace SPToolkits.Maestro
             _commandHandler = new CommandHandler(this, configurations.commands);
         }
 
-        ~MaestroTerminal() { IsScanningAsync = false; }
-
+        /// <summary>
+        /// Starts scannign the input for submission asyncronously.
+        /// </summary>
         public void StartAsyncScanner() 
         {
             if (IsScanningAsync == true)
                 return;
 
             IsScanningAsync = true;
-            ScanInputSubmissionAsync();
+            _cancellationTokenSource = new CancellationTokenSource();
+            _asyncScanTask = ScanInputSubmissionAsync(_cancellationTokenSource.Token);
         }
 
-        public void StopAsyncScanner() { IsScanningAsync = false; }
+        /// <summary>
+        /// Stops the async scanner task and cleans up.
+        /// </summary>
+        public async void StopAsyncScanner() 
+        {
+            if (IsScanningAsync == false)
+                return;
+
+            IsScanningAsync = false;
+            _cancellationTokenSource.Cancel();
+
+            try
+            {
+                await _asyncScanTask;
+            }
+            catch (OperationCanceledException) { }
+            finally
+            {
+                _cancellationTokenSource.Dispose();
+            }
+        }
 
 
         /// <summary>
         /// Asynchronously scans the terminal input field for the submission character (default: newline <b>\n</b>).
         /// </summary>
-        public async void ScanInputSubmissionAsync()
+        public async Task ScanInputSubmissionAsync(CancellationToken cancelToken)
         {
-            string input;
-            do
+            while (!cancelToken.IsCancellationRequested && IsScanningAsync)
             {
-                input = _ioHandler.Read();
+                var input = _ioHandler.Read();
                 if (IsInputSubmitReady(input))
                 {
-                    _ioHandler.ClearInput();
                     Scan(input);
+                    _ioHandler.ClearInput();
                 }
-                await Task.Yield();
+                await Task.Delay(1, cancelToken);
             }
-            while (IsScanningAsync);
         }
 
         /// <summary>
@@ -97,11 +120,10 @@ namespace SPToolkits.Maestro
         /// <param name="source">The source string to be scanned.</param>
         public void Scan(string source) 
         {
-            //Check for predefined commands
             if (WasPredefinedCommandExecuted(source))
                 return;
 
-            ParserOutput parserOutput = _configurations.parser.Parse(source);
+            ParserOutput parserOutput = _configurations.Parser.Parse(source);
             if (parserOutput.status != ParseStatus.Successful)
             {
                 if(_configurations.printParserErrors)
@@ -137,18 +159,24 @@ namespace SPToolkits.Maestro
         /// <returns>Neatly formatted command information.</returns>
         public void PrintHelperInformation() 
         {
-            TerminalWrite("Start commands with: " + _configurations.parser.CommandStart);
             if (Commands.Count() <= 0)
             {
-                TerminalWrite("No commands defined.");
+                TerminalWrite("Start commands with: " + _configurations.Parser.CommandStart);
                 return;
             }
-            TerminalWrite("COMMANDS <command_keyword>, <min_arg_count>");
-            foreach (var cmd in Commands) 
+            const string line = "------------------------------------";
+            StringBuilder buffer = new StringBuilder($"COMMANDS\n{line}\n");
+            string space = "    ";
+            foreach (var cmd in Commands)
             {
-                string buf = $"{cmd.Keyword}, {cmd.MinArgCount}";
-                TerminalWrite(buf);
+                buffer.AppendLine($"{space}{cmd.Keyword}");
+                buffer.AppendLine($"{space}min args: {cmd.MinArgCount}");
+                if (cmd is ICommandDescriptionProvider)
+                    buffer.AppendLine($"{space}{((ICommandDescriptionProvider)cmd).Description}");
+                buffer.AppendLine(line);
             }
+            TerminalWrite(buffer.ToString());
+            return;
         }
 
         /// <returns>True, if a predefined command was found and executed.</returns>
@@ -182,26 +210,43 @@ namespace SPToolkits.Maestro
         /// </summary>
         private void PrintCommandExecutionResult(CommandExecutionResult result) 
         {
+            if (result == null)
+            {
+                TerminalWrite("FATAL: Command execution result is null.");
+                return;
+            }
+
+            StringBuilder argBuffer = new StringBuilder();
+            for (int i = 0; i < result.parsedCommand.arguments.Length; i++) 
+            {
+                argBuffer.Append($"{result.parsedCommand.arguments[i]}");
+                if (i == result.parsedCommand.arguments.Length - 1)
+                    continue;
+                argBuffer.Append(", ");
+            }
+
+            string commandStr = $"{result.parsedCommand.keyword}({argBuffer.ToString()})";
+
             switch (result.executionStatus)
             {
                 default:
-                    TerminalWrite($"[{result.parsedCommand.keyword}] status: {result.executionStatus}. " + result.exception?.Message);
+                    TerminalWrite($"{commandStr} status: {result.executionStatus}. " + result.exception?.Message);
                     break;
                 case CommandExecutionStatus.Successful:
-                    TerminalWrite($"[{result.parsedCommand.keyword}] executed succesfully.");
+                    TerminalWrite($"{commandStr} executed succesfully.");
                     break;
                 case CommandExecutionStatus.FailedExecution:
-                    TerminalWrite($"[{result.parsedCommand.keyword}] execution failed.");
+                    TerminalWrite($"{commandStr} execution failed.");
                     break;
                 case CommandExecutionStatus.InvalidArgumentCount:
-                    TerminalWrite($"[{result.parsedCommand.keyword}] does not meet required argument count. [entered: {result.parsedCommand.argumentCount}] [req: {result.commandDefinition.MinArgCount}] ");
+                    TerminalWrite($"{commandStr} does not meet required argument count. [entered: {result.parsedCommand.argumentCount}] [req: {result.commandDefinition.MinArgCount}] ");
                     break;
                 case CommandExecutionStatus.KeywordNotFound:
-                    TerminalWrite($"[{result.parsedCommand.keyword}] keyword not found.");
+                    TerminalWrite($"{commandStr} keyword not found.");
                     break;
                 case CommandExecutionStatus.FatalError:
                     if(result.exception != null)
-                        TerminalWrite($"[{result.parsedCommand.keyword}] fatal: " + result.exception.Message);
+                        TerminalWrite($"{commandStr} fatal: " + result.exception.Message);
                     break;
             }
         }

@@ -16,14 +16,14 @@ namespace SPToolkits.Movement
         private float _inputBufferTime = 0;
 
         private int _jumpCount = 0;
+        private bool _jumpTriggered = false;
 
-        public override void Init(MotionControlContext ctx)
+        public override void Init(RuntimeControlContext ctx)
         {
-            //TODO: Gravity hardcoded, might be smart to move gravity to global data struct.
-            _jumpSpeed = MovementUtils.CalculateJumpSpeed(22f, peakJumpHeight);
+            CalculateJumpSpeed(ctx.settings.gravity);
         }
 
-        protected override void _Tick(float deltaTime, MotionControlContext ctx)
+        protected override void _Tick(float deltaTime, RuntimeControlContext ctx)
         {
             if (ctx.isCenterGrounded && Vector3.Dot(ctx.verticalVelocity.normalized, ctx.LocalUp) <= 0f)
             {
@@ -37,19 +37,24 @@ namespace SPToolkits.Movement
             JumpLogic(ctx, deltaTime);
         }
 
-        private void JumpLogic(MotionControlContext ctx, float deltaTime)
+        private void JumpLogic(RuntimeControlContext ctx, float deltaTime)
         {
-            if (InputManager.InputProvider.Jump)
+            if (InputManager.Provider.Jump)
                 _inputBufferTime = Time.time;
 
-            bool jumpTriggered = Time.time - _inputBufferTime < maxInputBufferTime;
+            _jumpTriggered = Time.time - _inputBufferTime < maxInputBufferTime;
 
-            if (InputManager.InputProvider.Jump && jumpTriggered)
+            if (_jumpTriggered)
                 if (ctx.isCenterGrounded || _coyoteTimer > 0 || _jumpCount < maxJumpCount)
                 {
                     _jumpCount++;
                     ctx.verticalVelocity = _jumpSpeed * ctx.LocalUp;
                 }
         }
-    }
+
+        public void CalculateJumpSpeed(float gravity) 
+        {
+            _jumpSpeed = MovementUtils.CalculateJumpSpeed(gravity, peakJumpHeight);
+        }
+    }   
 }

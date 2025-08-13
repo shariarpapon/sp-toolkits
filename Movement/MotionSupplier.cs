@@ -8,7 +8,7 @@ namespace SPToolkits.Movement
 
         [SerializeField] private bool _isEnabled = true;
 
-        public void Tick(float deltaTime, MotionControlContext ctx)
+        public void Tick(float deltaTime, RuntimeControlContext ctx)
         {
             if (!_isEnabled)
                 return;
@@ -16,9 +16,9 @@ namespace SPToolkits.Movement
             _Tick(deltaTime, ctx);
         }
 
-        public virtual void Init(MotionControlContext ctx) { }
+        public virtual void Init(RuntimeControlContext ctx) { }
 
-        protected abstract void _Tick(float deltaTime, MotionControlContext ctx);
+        protected abstract void _Tick(float deltaTime, RuntimeControlContext ctx);
 
         public void SetEnabled(bool enabled)
         {

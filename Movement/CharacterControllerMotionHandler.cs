@@ -8,7 +8,7 @@ namespace SPToolkits.Movement
     {
         public bool motionSupplyEnabled = true;
 
-        private readonly MotionControlContext _context;
+        private readonly RuntimeControlContext _context;
         private readonly MotionSupplier[] _motionSuppliers;
 
         private readonly Dictionary<Type, MotionSupplier> _motionSupplierCache;
@@ -16,7 +16,7 @@ namespace SPToolkits.Movement
         public CharacterControllerMotionHandler(CharacterController controller, GlobalMovementSettings settings, MotionSupplier[] motionSuppliers, Camera viewCamera) 
         {
             _motionSuppliers = motionSuppliers;
-            _context = new MotionControlContext(this, controller, settings, viewCamera);
+            _context = new RuntimeControlContext(this, controller, settings, viewCamera);
 
             _motionSupplierCache = new Dictionary<Type, MotionSupplier>();
             for (int i = 0; i < _motionSuppliers.Length; i++)
@@ -31,7 +31,7 @@ namespace SPToolkits.Movement
         public CharacterControllerMotionHandler(CharacterController controller, GlobalMovementSettings settings, MotionSupplier[] motionSuppliers)
         {
             _motionSuppliers = motionSuppliers;
-            _context = new MotionControlContext(this, controller, settings, Camera.main);
+            _context = new RuntimeControlContext(this, controller, settings, Camera.main);
         }
 
         public void Init()
@@ -56,12 +56,35 @@ namespace SPToolkits.Movement
                 _motionSupplierCache[typeOfMotionSupplier].SetEnabled(enabled);
         }
 
-        private void UpdateContext(MotionControlContext ctx) 
+        public MotionSupplier GetMotionSupplierOfType(Type typeOfSupplier)
+        {
+            if (_motionSupplierCache.ContainsKey(typeOfSupplier))
+                return _motionSupplierCache[typeOfSupplier];
+            else
+            {
+                Debug.LogError("Motion Supplier type does not exist in the cachce.");
+                return null;
+            }
+        }
+
+
+        public T GetMotionSupplierOfType<T>() where T : MotionSupplier
+        {
+            if (_motionSupplierCache.ContainsKey(typeof(T)))
+                return _motionSupplierCache[typeof(T)] as T;
+            else 
+            { 
+                Debug.LogError("Motion Supplier type does not exist in the cachce.");
+                return null;
+            }
+        }
+
+        private void UpdateContext(RuntimeControlContext ctx) 
         {
             ctx.isCenterGrounded = MovementUtils.IsCenterGrounded(ctx.controller, ctx.settings.whatsIsGround, ctx.settings.maxStableSlopeAngle);
         }
 
-        private void SupplyMotion(MotionControlContext ctx) 
+        private void SupplyMotion(RuntimeControlContext ctx) 
         {
             for (int i = 0; i < _motionSuppliers.Length; i++)
                 _motionSuppliers[i].Tick(Time.deltaTime, ctx);

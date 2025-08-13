@@ -6,6 +6,9 @@ namespace SPToolkits.InputSystem
     {
         public bool PauseGame => Input.GetKeyDown(KeyCode.Escape);
         public bool TabMenu => Input.GetKeyDown(KeyCode.Tab);
+        public bool OpenCommandConsole => Input.GetKeyDown(KeyCode.F1);
+        public bool Submit => Input.GetKey(KeyCode.Return);
+
         public bool Jump => false;
         public bool Sprint => false;
         public bool Aim => false;

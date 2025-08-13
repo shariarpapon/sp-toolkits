@@ -5,7 +5,7 @@ namespace SPToolkits.Movement
     [CreateAssetMenu(fileName ="Player Vertical Movement", menuName ="Wiz/Motion Suppliers/Player Vertical Movement")]
     public class PlayerVerticalMovement : MotionSupplier
     {
-        protected override void _Tick(float deltaTime, MotionControlContext ctx)
+        protected override void _Tick(float deltaTime, RuntimeControlContext ctx)
         {
             MovementUtils.AppplyEdgeProximitySlipToController(ctx.controller, ctx.settings.motionCorrectionLayers, ctx.settings.edgeSlipSpeed, ctx.settings.edgeSlipThreshold, ctx.isCenterGrounded);
 

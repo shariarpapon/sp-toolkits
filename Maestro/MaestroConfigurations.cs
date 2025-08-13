@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace SPToolkits.Maestro
 {
@@ -11,8 +10,8 @@ namespace SPToolkits.Maestro
     {
         public readonly IMaestroIOHandler ioHandler;
         public readonly IEnumerable<IMaestroCommand> commands;
+        public IMaestroParser Parser { get; private set; } = new MaestroDefaultParser();
 
-        public IMaestroParser parser = new MaestroDefaultParser();
         public System.Action<CommandExecutionResult> onCommandExecutedCallback = null;
         public bool printCommandExecutionResult = true;
         public bool printParserErrors = true;
@@ -35,21 +34,19 @@ namespace SPToolkits.Maestro
             if (ioHandler == null)
                 throw new System.Exception("IO provider cannot be null.");
 
-            if (commands == null || commands.Count() <= 0)
+            if (commands == null || !commands.Any())
                 throw new System.Exception("No valid commands were passed in to the terminal builder.");
 
             return new MaestroConfigurations(ioHandler, commands);
         }
 
-
         /// <summary>
         /// The input scanner will submit the input string for execution upon encountering this character.
         /// <br>This logic is superceded if a submissionCondition is explicitely defined.</br>
         /// </summary>
-        /// <param name="instance">The instance of this object</param>
-        public MaestroConfigurations SetSubmissionChar(char submissionChars)
+        public MaestroConfigurations SetSubmissionChar(char submissionChar)
         {
-            this.submissionChar = submissionChars;
+            this.submissionChar = submissionChar;
             return this;
         }
 
@@ -102,7 +99,7 @@ namespace SPToolkits.Maestro
         /// <param name="parser">A IMaestroParser object which defines the parsing methods.</param>
         public MaestroConfigurations SetParser(IMaestroParser parser) 
         {
-            this.parser = parser;
+            this.Parser = parser;
             return this;
         }
 

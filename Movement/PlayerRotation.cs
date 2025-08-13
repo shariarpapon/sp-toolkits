@@ -7,7 +7,7 @@ namespace SPToolkits.Movement
     {
         public float turnSpeed = 20f;
 
-        protected override void _Tick(float deltaTime, MotionControlContext ctx)
+        protected override void _Tick(float deltaTime, RuntimeControlContext ctx)
         {
             if(ctx.lateralVelocity.sqrMagnitude > Mathf.Epsilon)
                 MovementUtils.SlerpRotateForward(ctx.transform, ctx.moveDirection, turnSpeed);

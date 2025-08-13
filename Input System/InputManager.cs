@@ -17,7 +17,7 @@ namespace SPToolkits.InputSystem
         /// This is the active input source. 
         /// <br>This will be null if input is disabled.</br>
         /// </summary>
-        public static IInputProvider InputProvider
+        public static IInputProvider Provider
         {
             get 
             {
@@ -50,7 +50,7 @@ namespace SPToolkits.InputSystem
         public static void SetInputProvider(IInputProvider provider)
         {
             if (provider != null)  
-                InputProvider = provider; 
+                Provider = provider; 
             else 
                 Debug.LogWarning("Cannot assign a null input provider."); 
         }

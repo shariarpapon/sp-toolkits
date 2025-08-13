@@ -7,9 +7,13 @@ namespace SPToolkits.InputSystem
     /// </summary>
     public interface IInputProvider
     {
-        //Game Specific
+        //
         public bool PauseGame { get; }
         public bool TabMenu { get; }
+        public bool OpenCommandConsole { get; }
+        public bool Submit { get; }
+
+        //Gameplay
         public bool Jump { get; } 
         public bool Sprint { get; }
         public bool PrimaryUse { get; }

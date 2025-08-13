@@ -21,13 +21,19 @@ namespace SPToolkits.Movement
         private DashState _dashState = DashState.Ready;
         private float _remainingDashDistance = 0.0f;
         private float _dashCooldownTimer = 0.0f;
+        private MotionSupplier _lateralMovement;
 
-        protected override void _Tick(float deltaTime, MotionControlContext ctx)
+        public override void Init(RuntimeControlContext ctx)
+        {
+            _lateralMovement = ctx.handler.GetMotionSupplierOfType(typeof(PlayerLateralMovement));
+        }
+
+        protected override void _Tick(float deltaTime, RuntimeControlContext ctx)
         {
             switch (_dashState)
             {
                 case DashState.Ready:
-                    if (InputManager.InputProvider.Dash)
+                    if (InputManager.Provider.Dash)
                         StartDash(ctx);
                     break;
                 case DashState.Dashing:
@@ -42,15 +48,14 @@ namespace SPToolkits.Movement
             }
         }
 
-        private void StartDash(MotionControlContext ctx) 
+        private void StartDash(RuntimeControlContext ctx) 
         {
             _dashState = DashState.Dashing;
             _remainingDashDistance = dashDistance;
-
-            ctx.handler.SetMotionSupplierEnabled(typeof(PLayerLateralMovement), false);
+            _lateralMovement.SetEnabled(false);
         }
 
-        private void Dash(float deltaTime, MotionControlContext ctx)
+        private void Dash(float deltaTime, RuntimeControlContext ctx)
         {
             float step = dashSpeed * deltaTime;
             if (step >= _remainingDashDistance)
@@ -63,14 +68,14 @@ namespace SPToolkits.Movement
                 EndDash(ctx);
         }
 
-        private void EndDash(MotionControlContext ctx)
+        private void EndDash(RuntimeControlContext ctx)
         {
             _dashState = DashState.Cooldown;
             _dashCooldownTimer = dashCooldown;
-            ctx.handler.SetMotionSupplierEnabled(typeof(PLayerLateralMovement), true);
+            _lateralMovement.SetEnabled(true);
         }
 
-        private void Cooldown(float deltaTime, MotionControlContext ctx) 
+        private void Cooldown(float deltaTime, RuntimeControlContext ctx) 
         {
             _dashCooldownTimer -= deltaTime;
             if (_dashCooldownTimer <= 0) 
@@ -84,7 +89,7 @@ namespace SPToolkits.Movement
             }
         }
 
-        private void Falling(MotionControlContext ctx) 
+        private void Falling(RuntimeControlContext ctx) 
         {
             if (ctx.isCenterGrounded)
                 _dashState = DashState.Ready;
