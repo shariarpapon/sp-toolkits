@@ -21,7 +21,7 @@
         /// </summary>
         /// <param name="terminal">The terminal which initiated the command executaion.</param>
         /// <param name="args">Arguments of the command</param>
-        /// <returns>True if executed succesfully.</returns>
+        /// <returns>True if executed successfully.</returns>
         bool Execute(MaestroTerminal terminal, string[] args);
     }
 }

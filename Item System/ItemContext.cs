@@ -5,7 +5,7 @@ namespace SPToolkits.ItemSystem
     {
         Default = 0,
         Gun,
-        Sword,
+        MaleeEquipment,
         AbilityUnlocker
     }
 }

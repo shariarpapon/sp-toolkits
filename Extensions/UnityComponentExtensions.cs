@@ -4,6 +4,7 @@ using System.IO;
 
 namespace SPToolkits.Extensions
 {
+
     public static class UnityComponentExtensions
     {
         #region General
@@ -12,7 +13,7 @@ namespace SPToolkits.Extensions
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="playCondition"></param>
-        public static void PlayToggle(this ParticleSystem instance, bool playCondition) 
+        public static void PlayToggle(this ParticleSystem instance, bool playCondition)
         {
             if (playCondition)
                 instance.PlayIfStopped();
@@ -23,7 +24,7 @@ namespace SPToolkits.Extensions
         /// <summary>
         /// Plays the particle system only if it is currently stopped.
         /// </summary>
-        public static void PlayIfStopped(this ParticleSystem instance) 
+        public static void PlayIfStopped(this ParticleSystem instance)
         {
             if (instance.isStopped)
                 instance.Play();
@@ -38,7 +39,7 @@ namespace SPToolkits.Extensions
         public static T GetResourceInstance<T>(this object obj, string resourceDir, string resourceName) where T : Object
         {
             var instance = Object.FindObjectOfType<T>(true);
-            if (instance == null) 
+            if (instance == null)
             {
                 GameObject prefab = Resources.Load<GameObject>(Path.Combine(resourceDir, resourceName));
                 instance = Object.Instantiate(prefab).GetComponent<T>();
@@ -51,7 +52,7 @@ namespace SPToolkits.Extensions
         /// <summary>
         /// Sets the alpha value to zero.
         /// </summary>
-        public static void MakeTransparent(this Image image) 
+        public static void MakeTransparent(this Image image)
         {
             image.color = new Color(image.color.r, image.color.g, image.color.b, 0);
         }
@@ -67,7 +68,7 @@ namespace SPToolkits.Extensions
         /// <summary>s
         /// Sets the slider value.
         /// </summary>
-        public static void SetValue(this Slider slider, float value) 
+        public static void SetValue(this Slider slider, float value)
         {
             slider.value = value;
         }
@@ -75,7 +76,7 @@ namespace SPToolkits.Extensions
         /// <summary>
         /// Sets the toggle on state.
         /// </summary>
-        public static void SetValue(this Toggle toggle, bool on) 
+        public static void SetValue(this Toggle toggle, bool on)
         {
             toggle.isOn = on;
         }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace SPToolkits.Movement
 {
-    [CreateAssetMenu(fileName ="Global Movement Settings", menuName ="Wiz/Global Movement Settings", order = 0)]
+    [CreateAssetMenu(fileName ="Global Movement Settings", menuName ="SPToolkits/Global Movement Settings", order = 0)]
     public sealed class GlobalMovementSettings : ScriptableObject
     {
         [Tooltip("Layers from which the player can jump")]

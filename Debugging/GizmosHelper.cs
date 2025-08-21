@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Wiz.Debugging
+namespace SPToolkits.Debugging
 {
     public class GizmosHelper : MonoBehaviour
     {

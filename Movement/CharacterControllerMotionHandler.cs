@@ -8,10 +8,12 @@ namespace SPToolkits.Movement
     {
         public bool motionSupplyEnabled = true;
 
+        public RuntimeControlContext Context { get { return _context; } }
         private readonly RuntimeControlContext _context;
         private readonly MotionSupplier[] _motionSuppliers;
 
         private readonly Dictionary<Type, MotionSupplier> _motionSupplierCache;
+
 
         public CharacterControllerMotionHandler(CharacterController controller, GlobalMovementSettings settings, MotionSupplier[] motionSuppliers, Camera viewCamera) 
         {

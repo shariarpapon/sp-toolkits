@@ -233,7 +233,7 @@ namespace SPToolkits.Maestro
                     TerminalWrite($"{commandStr} status: {result.executionStatus}. " + result.exception?.Message);
                     break;
                 case CommandExecutionStatus.Successful:
-                    TerminalWrite($"{commandStr} executed succesfully.");
+                    TerminalWrite($"{commandStr} executed successfully.");
                     break;
                 case CommandExecutionStatus.FailedExecution:
                     TerminalWrite($"{commandStr} execution failed.");

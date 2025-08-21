@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using SPToolkits.Extensions.Unity;
+using SPToolkits.Extensions;
 
 namespace SPToolkits.ItemSystem.UI
 {
