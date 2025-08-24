@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace SPToolkits.States
 {
-    public abstract class StateHandler<T> : MonoBehaviour where T : StateHandler<T>
+    public abstract class StateHandlerMonoBehaviour<T> : MonoBehaviour where T : StateHandlerMonoBehaviour<T>
     {
         protected IState<T> _currentState;
 

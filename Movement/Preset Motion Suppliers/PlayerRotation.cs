@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace SPToolkits.Movement
 {
-    [CreateAssetMenu(fileName = "Player Rotation", menuName = "Wiz/Motion Suppliers/Player Rotation")]
+    [CreateAssetMenu(fileName = nameof(PlayerRotation), menuName = "SPToolkits/Motion Suppliers/" + nameof(PlayerRotation))]
     public class PlayerRotation : MotionSupplier
     {
         public float turnSpeed = 20f;

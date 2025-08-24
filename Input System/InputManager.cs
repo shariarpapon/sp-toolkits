@@ -11,14 +11,14 @@ namespace SPToolkits.InputSystem
         /// If true, all non-UI user input will be disabled.
         /// </summary>
         public static bool IsInputDisabled { get; private set; } = false;
-        private static IInputProvider _DefaultInputProvider;
+        private static InputProvider _DefaultInputProvider;
 
         /// <summary>
         /// This is the active input source. 
         /// <br>This will be null if input is disabled.</br>
         /// </summary>
-        public static IInputProvider Provider
-        {
+        public static InputProvider Provider
+        { 
             get 
             {
                 if (IsInputDisabled)
@@ -30,16 +30,16 @@ namespace SPToolkits.InputSystem
                 _InputProvider = value;
             }
         }
-        private static IInputProvider _InputProvider;
-        private static IInputProvider _DisabledInputProvider;
+        private static InputProvider _InputProvider;
+        private static InputProvider _DisabledInputProvider;
 
         /// <summary>
         /// Initializes the input manager.
         /// </summary>
         public static void Initialize() 
         {
-            _DefaultInputProvider = new DefaultMKInputs();
-            _DisabledInputProvider = new DisabledInputs();
+            _DefaultInputProvider = new InputProvider();
+            _DisabledInputProvider = new DisabledInputProvider();
             SetInputProvider(_DefaultInputProvider);
             Enable();
         }
@@ -47,7 +47,7 @@ namespace SPToolkits.InputSystem
         /// <summary>
         /// Sets the given input provider as the active one.
         /// </summary>
-        public static void SetInputProvider(IInputProvider provider)
+        public static void SetInputProvider(InputProvider provider)
         {
             if (provider != null)  
                 Provider = provider; 

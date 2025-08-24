@@ -5,25 +5,18 @@ using SPToolkits.InputSystem;
 
 namespace SPToolkits.Movement
 {
-    [CreateAssetMenu(fileName = "Basic Player Movement", menuName = "Wiz/Motion Suppliers/Basic Player Movement")]
+    [CreateAssetMenu(fileName = nameof(PlayerLateralMovement), menuName = "SPToolkits/Motion Suppliers/" + nameof(PlayerLateralMovement))]
     public class PlayerLateralMovement : MotionSupplier
     {
         public float walkSpeed = 4f;
         public float runSpeed = 6f;
         public float NormalizedSpeed { get; private set; }
-        public RuntimeControlContext RuntimeCtx { get; private set; }
-
         private float _activeMoveSpeed;
 
 #if BOB_LOGIC
         public float bobHeight = 3f;
         public float bobFreq = 1f;
 #endif
-
-        public override void Init(RuntimeControlContext ctx)
-        {
-            RuntimeCtx = ctx;
-        }
 
         protected override void _Tick(float deltaTime, RuntimeControlContext ctx)
         {

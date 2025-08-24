@@ -17,12 +17,22 @@ namespace SPToolkits.Movement
         }
 
         public virtual void Init(RuntimeControlContext ctx) { }
+        public virtual void OnEnabled() { }
+        public virtual void OnDisabled() { }
 
         protected abstract void _Tick(float deltaTime, RuntimeControlContext ctx);
 
-        public void SetEnabled(bool enabled)
+        public void SetEnabled(bool isEnabled)
         {
-            _isEnabled = enabled;
+            if (isEnabled == _isEnabled)
+                return;
+
+            _isEnabled = isEnabled;
+
+            if (_isEnabled)
+                OnEnabled();
+            else
+                OnDisabled();
         }
     }
 }

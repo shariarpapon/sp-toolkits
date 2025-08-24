@@ -11,13 +11,11 @@ namespace SPToolkits.Movement
         public RuntimeControlContext Context { get { return _context; } }
         private readonly RuntimeControlContext _context;
         private readonly MotionSupplier[] _motionSuppliers;
-
         private readonly Dictionary<Type, MotionSupplier> _motionSupplierCache;
 
-
-        public CharacterControllerMotionHandler(CharacterController controller, GlobalMovementSettings settings, MotionSupplier[] motionSuppliers, Camera viewCamera) 
+        public CharacterControllerMotionHandler(CharacterController controller, MotionControlSettings settings, Camera viewCamera) 
         {
-            _motionSuppliers = motionSuppliers;
+            _motionSuppliers = settings.motionSuppliers;
             _context = new RuntimeControlContext(this, controller, settings, viewCamera);
 
             _motionSupplierCache = new Dictionary<Type, MotionSupplier>();
@@ -26,13 +24,13 @@ namespace SPToolkits.Movement
                 Type motionSupplierType = _motionSuppliers[i].GetType();
                 if (!_motionSupplierCache.ContainsKey(motionSupplierType))
                     _motionSupplierCache.Add(motionSupplierType, _motionSuppliers[i]);
-                else Debug.LogError("Duplicate motion suppliers provided, it will be skipped.");
+                else Debug.LogError("Duplicate motion suppliers provided, latter will be skipped.");
             }
         }
 
-        public CharacterControllerMotionHandler(CharacterController controller, GlobalMovementSettings settings, MotionSupplier[] motionSuppliers)
+        public CharacterControllerMotionHandler(CharacterController controller, MotionControlSettings settings)
         {
-            _motionSuppliers = motionSuppliers;
+            _motionSuppliers = settings.motionSuppliers;
             _context = new RuntimeControlContext(this, controller, settings, Camera.main);
         }
 
@@ -41,7 +39,6 @@ namespace SPToolkits.Movement
             for (int i = 0; i < _motionSuppliers.Length; i++)
                 _motionSuppliers[i].Init(_context);
         }
-        public void Dispose() { }
 
         public void Update()
         {

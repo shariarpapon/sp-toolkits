@@ -5,7 +5,7 @@ namespace SPToolkits.States
     /// <summary>
     /// A singleton state handler deriving from the normal StateHandler.
     /// </summary>
-    public abstract class SingletonStateHandler<T> : StateHandler<T> where T : SingletonStateHandler<T>
+    public abstract class SingletonStateHandlerMonoBehaviour<T> : StateHandlerMonoBehaviour<T> where T : SingletonStateHandlerMonoBehaviour<T>
     {
         public static T Instance { get; private set; }
 

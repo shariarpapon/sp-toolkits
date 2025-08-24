@@ -9,7 +9,7 @@ namespace SPToolkits.Movement
         public readonly CharacterController controller = null;
         public readonly Transform transform = null;
         public readonly Camera viewCamera = null;
-        public readonly GlobalMovementSettings settings = null;
+        public readonly MotionControlSettings settings = null;
 
         //Helper properties
         public Vector3 LocalUp => transform.up;
@@ -21,7 +21,7 @@ namespace SPToolkits.Movement
         public Vector3 lateralVelocity = Vector3.zero;
         public Vector3 verticalVelocity = Vector3.zero;
 
-        public RuntimeControlContext(CharacterControllerMotionHandler handler, CharacterController controller, GlobalMovementSettings settings, Camera viewCamera) 
+        public RuntimeControlContext(CharacterControllerMotionHandler handler, CharacterController controller, MotionControlSettings settings, Camera viewCamera) 
         {
             this.handler = handler;
             this.controller = controller;

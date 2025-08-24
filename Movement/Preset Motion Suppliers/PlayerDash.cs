@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SPToolkits.Movement
 {
-    [CreateAssetMenu(fileName = "Player Dash", menuName = "SPToolkits/Motion Suppliers/" + nameof(PlayerDash))]
+    [CreateAssetMenu(fileName = nameof(PlayerDash), menuName = "SPToolkits/Motion Suppliers/" + nameof(PlayerDash))]
     public class PlayerDash : MotionSupplier
     {
         private enum DashState 
@@ -17,6 +17,9 @@ namespace SPToolkits.Movement
         public float dashDistance = 4f;
         public float dashSpeed = 30f;
         public float dashCooldown = 0.2f;
+
+        public event System.Action onDashStart;
+        public event System.Action onDashEnd;
 
         private DashState _dashState = DashState.Ready;
         private float _remainingDashDistance = 0.0f;
@@ -53,6 +56,7 @@ namespace SPToolkits.Movement
             _dashState = DashState.Dashing;
             _remainingDashDistance = dashDistance;
             _lateralMovement.SetEnabled(false);
+            onDashStart?.Invoke();
         }
 
         private void Dash(float deltaTime, RuntimeControlContext ctx)
@@ -73,6 +77,7 @@ namespace SPToolkits.Movement
             _dashState = DashState.Cooldown;
             _dashCooldownTimer = dashCooldown;
             _lateralMovement.SetEnabled(true);
+            onDashEnd?.Invoke();
         }
 
         private void Cooldown(float deltaTime, RuntimeControlContext ctx) 

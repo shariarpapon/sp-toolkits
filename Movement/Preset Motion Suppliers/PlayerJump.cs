@@ -3,7 +3,7 @@ using SPToolkits.InputSystem;
 
 namespace SPToolkits.Movement
 {
-    [CreateAssetMenu(fileName ="Player Jump", menuName = "SPToolkits/Motion Suppliers/" + nameof(PlayerJump))]
+    [CreateAssetMenu(fileName =nameof(PlayerJump), menuName = "SPToolkits/Motion Suppliers/" + nameof(PlayerJump))]
     public class PlayerJump : MotionSupplier
     {
         [System.Serializable]

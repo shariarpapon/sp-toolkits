@@ -203,7 +203,7 @@ namespace SPToolkits.Movement
         /// <param name="slipSpeed">The speed at which the character slips of the edge.</param>
         /// <param name="slipThreshold">The normalized distance of character's center from the edge of the ground before slipping.</param>
         /// <param name="grounded">Is the player grounded currently?</param>
-        public static void AppplyEdgeProximitySlipToController(CharacterController controller, LayerMask whatIsGround, float slipSpeed, float slipThreshold, bool grounded)
+        public static void AppplyEdgeProximitySlip(CharacterController controller, LayerMask whatIsGround, float slipSpeed, float slipThreshold, bool grounded)
         {
             if (grounded)
                 return;
